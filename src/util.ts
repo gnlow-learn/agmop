@@ -1,3 +1,5 @@
+import { dp } from "./dp.ts"
+
 export const tuple =
 // deno-lint-ignore no-explicit-any
 <Args extends any[]>
@@ -68,12 +70,27 @@ export class PMF<T> extends MF<T> {
     sample = (seed = Math.random()) => {
         return this.toCMF().sample(seed)
     }
+    dp(alpha: number) {
+        return dp(alpha, this.sample)
+    }
+
+    static uniform<T>(...ts: T[]) {
+        return new PMF(new Map(ts.map(x => [x, 1/ts.length])))
+    }
 }
 
 export class CMF<T> extends MF<T> {
     sample(seed = Math.random()) {
-        return this.p.entries()
-            .find(([_, v]) => seed < v)!
-            [0]
+        // todo: use prng
+        const result = this.p.entries()
+            .find(([_, v]) => seed < v)
+        
+        if (!result) {
+            const last = this.p.entries().reduce((_, x) => x)
+            console.warn("[warn] Chose last item cause sum of probs != 1", last)
+            return last[0]
+        }
+
+        return result[0]
     }
 }

@@ -1,8 +1,6 @@
 // 3.2 N-Gram Models with DP-Backoff
 
-import { dp } from "./src/dp.ts"
-import { uniform } from "./src/deps.ts"
-import { PMF, tuple } from "./src/util.ts"
+import { PMF } from "./src/util.ts"
 
 type Char = string
 
@@ -36,10 +34,8 @@ const T = ["a", "b", "c"] as const
 const Hf =
 (n: number, u: Str): PMF<Char_> =>
     n >= 1
-        ? dp(theta(f(n)(u)), Hf(n-1, u).sample)
-        : dp(theta(f(n)(u)),
-            seed => tuple(...T, STOP)[Math.floor(uniform.factory({ seed })(0, T.length + 1))]
-        )
+        ? Hf(n-1, u).dp(theta(f(n)(u)))
+        : PMF.uniform<Char_>(...T, STOP).dp(theta(f(n)(u)))
 
 const K =
 (N: number, u: Str) =>
