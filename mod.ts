@@ -1,4 +1,4 @@
-import { MF, PMF } from "./src/util.ts";
+import { MF, PMF } from "./src/util.ts"
 
 type Vertex = { p: string, t: "and" | "or" }
 

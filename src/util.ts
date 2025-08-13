@@ -65,7 +65,7 @@ export class PMF<T> extends MF<T> {
             )
         )
     }
-    sample(seed = Math.random()) {
+    sample = (seed = Math.random()) => {
         return this.toCMF().sample(seed)
     }
 }
