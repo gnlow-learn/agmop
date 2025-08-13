@@ -19,6 +19,10 @@ export class MF<T> {
         )))
     }
 
+    mul(scalar: number) {
+        return this.map(([k, v]) => [k, v*scalar])
+    }
+
     static sum<T>(...mfs: MF<T>[]) {
         return new MF(mfs
             .values()
