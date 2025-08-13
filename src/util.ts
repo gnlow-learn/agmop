@@ -10,6 +10,15 @@ export class MF<T> {
         this.p = p
     }
 
+    map<O>(f: ([k, v]: [T, number]) => [O, number]) {
+        return new MF(new Map(this.p.entries().map(f)))
+    }
+    flatMap<O>(f: ([k, v]: [T, number]) => MF<O>) {
+        return new MF(new Map(this.p.entries().flatMap(x =>
+            f(x).p.entries()
+        )))
+    }
+
     static sum<T>(...mfs: MF<T>[]) {
         return new MF(mfs
             .values()
@@ -22,19 +31,17 @@ export class MF<T> {
     }
     private static join<T>(a: MF<T[]>, ...[b, ...rest]: MF<T>[]): MF<T[]> {
         if (rest.length == 0) {
-            return new MF(new Map(
-                a.p.entries().flatMap(([k1, v1]) => 
-                    b.p.entries().map(([k2, v2]) =>
-                        tuple([...k1, k2], v1*v2)
-                    )
+            return a.flatMap(([k1, v1]) => 
+                b.map(([k2, v2]) =>
+                    tuple([...k1, k2], v1*v2)
                 )
-            ))
+            )
         }
         return MF.join(MF.join(a, b), ...rest)
     }
     static prod<T>(...[a, ...mfs]: MF<T>[]) {
         return MF.join(
-            new MF(new Map(a.p.entries().map(([k, v]) => [[k], v]))),
+            a.map(([k, v]) => [[k], v]),
             ...mfs,
         )
     }
