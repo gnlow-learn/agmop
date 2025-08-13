@@ -35,6 +35,6 @@ export const dp =
     const rand = uniform.factory({ seed })
     gem(a, seed)
         .take(sample)
-        .forEach(b => pmf.add(h(rand(0, 1)), b))
+        .forEach(b => pmf.set(h(rand(0, 1)), b))
     return pmf
 }
