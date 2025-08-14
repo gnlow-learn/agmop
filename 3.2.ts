@@ -45,7 +45,7 @@ const K =
         : (Hf(N, u).p.get(hd(alpha))||0)*K(N, [...u, hd(alpha)])
             (tl(alpha))
 
-const k0 =
+const getPMF =
 (n: number, u: Str, maxLength = 4): PMF<Str> =>
     u.slice(-1)[0] == STOP
         ? new PMF(new Map([[u, 1]]))
@@ -53,7 +53,7 @@ const k0 =
     u.length < maxLength
         ? Hf(n, u)
             .flatMap(([k, v]) =>
-                k0(n, [...u, k], maxLength)
+                getPMF(n, [...u, k], maxLength)
                     .map(([str, v]) => [str, v])
                     .mul(v)
             )
@@ -63,5 +63,5 @@ const k0 =
 console.log(
     K(3, [START])(["a", "b", STOP]),
     Hf(3, [START]),
-    k0(3, [START], 4)
+    getPMF(3, [START], 4),
 )
