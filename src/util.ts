@@ -21,8 +21,16 @@ export class MF<T> {
         )))
     }
 
+    filter(f: ([k, v]: [T, number]) => boolean) {
+        return new MF(new Map(this.p.entries().filter(f)))
+    }
+
     mul(scalar: number) {
         return this.map(([k, v]) => [k, v*scalar])
+    }
+
+    as<C extends MF<T>>(ctor: { new(p: Map<T, number>): C }) {
+        return new ctor(this.p)
     }
 
     static sum<T>(...mfs: MF<T>[]) {
