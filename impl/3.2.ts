@@ -1,6 +1,6 @@
 // 3.2 N-Gram Models with DP-Backoff
 
-import { PMF } from "./src/util.ts"
+import { PMF } from "../src/util.ts"
 
 type Char = string
 
